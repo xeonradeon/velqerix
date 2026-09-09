@@ -1,3 +1,4 @@
+cat > src/App.jsx << 'EOF'
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -70,6 +71,7 @@ export default function App() {
   const [showLoading, setShowLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const [countdown, setCountdown] = useState(30);
+  const [selectedImage, setSelectedImage] = useState(null);
   
   const [activeTab, setActiveTab] = useState(Tabs.COMBAT);
   const [settings, setSettings] = useState({
@@ -477,7 +479,7 @@ export default function App() {
               <Network size={24} className="text-[#7c6cf0]" />
             </div>
             <h3 className="font-black mb-1">Get Proxy</h3>
-            <p className="text-xs text-[#8f9bbc]">Ambil proxy gratis untuk koneksi lebih stabil.</p>
+            <p className="text-xs text-[#8f9bbc]">Ambil proxy gratis untuk membuka Velqerix.</p>
             <ChevronRight size={16} className="mt-4 text-[#8f9bbc] group-hover:translate-x-1 transition" />
           </button>
     
@@ -500,26 +502,18 @@ export default function App() {
           </button>
         </div>
     
-        {/* BUKTI TES CHEAT*/}
         <motion.div 
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
           className="p-6 rounded-2xl bg-[#0b1226] border border-[#7c6cf0]/25"
         >
           <div className="flex items-center gap-3 mb-4">
             <ShieldAlert size={20} className="text-[#00e5ff]" />
-            <h3 className="text-lg font-black">Testimoni & Bukti Tes Cheat</h3>
+            <h3 className="text-lg font-black">Bukti Tes Cheat</h3>
           </div>
     
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div className="p-4 rounded-xl bg-[#1a2344] border border-[#34e5b0]/20">
-              <p className="text-sm font-bold text-[#34e5b0] mb-2">AKUN 1</p>
-              <p className="text-xs text-[#8f9bbc] leading-relaxed">
-                Semua mode bisa digunakan layaknya player pada umumnya.
-                Winstreak tanpa crash, dan cukup 1x inject.
-              </p>
-            </div>
-            <div className="p-4 rounded-xl bg-[#1a2344] border border-[#34e5b0]/20">
-              <p className="text-sm font-bold text-[#34e5b0] mb-2">AKUN 2</p>
+              <p className="text-sm font-bold text-[#34e5b0] mb-2">Keterangan</p>
               <p className="text-xs text-[#8f9bbc] leading-relaxed">
                 Semua mode bisa digunakan layaknya player pada umumnya.
                 Winstreak tanpa crash, dan cukup 1x inject.
@@ -528,18 +522,26 @@ export default function App() {
           </div>
     
           <div className="overflow-hidden rounded-2xl border border-[#2563ff]/20">
-            <div className="flex gap-4 animate-marquee">
+            <div className="flex gap-0 animate-marquee">
               {[
                 "https://files.catbox.moe/gyhtj2.jpg",
                 "https://files.catbox.moe/4fv6dw.jpg",
                 "https://files.catbox.moe/3esxzg.jpg",
               ].map((img, idx) => (
-                <img 
+                <button 
                   key={idx} 
-                  src={img} 
-                  alt="Bukti Tes" 
-                  className="w-48 h-32 object-cover rounded-xl border border-[#2563ff]/30 shrink-0"
-                />
+                  onClick={() => setSelectedImage(img)}
+                  className="relative shrink-0"
+                >
+                  <img 
+                    src={img} 
+                    alt="Bukti Tes" 
+                    className="w-64 h-40 object-cover shrink-0 cursor-pointer"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition">
+                    <p className="text-white text-xs font-bold bg-black/60 px-3 py-1 rounded-full">Klik untuk perbesar</p>
+                  </div>
+                </button>
               ))}
             </div>
           </div>
@@ -711,6 +713,30 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <AnimatePresence>
+        {selectedImage && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setSelectedImage(null)}
+            className="fixed inset-0 z-[1000] bg-black/90 flex items-center justify-center p-4 cursor-zoom-out"
+          >
+            <button 
+              onClick={() => setSelectedImage(null)} 
+              className="absolute top-4 right-4 text-white bg-black/50 rounded-full p-2 hover:bg-black/70 transition"
+            >
+              <X size={24} />
+            </button>
+            <motion.img 
+              src={selectedImage} 
+              alt="Fullscreen" 
+              className="max-w-full max-h-full object-contain rounded-lg"
+              initial={{ scale: 0.8 }} animate={{ scale: 1 }} exit={{ scale: 0.8 }}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
         {showLoading && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -827,3 +853,4 @@ export default function App() {
     </div>
   );
 }
+EOF
