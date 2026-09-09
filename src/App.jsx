@@ -1,4 +1,3 @@
-cat > src/App.jsx << 'EOF'
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -853,4 +852,3 @@ export default function App() {
     </div>
   );
 }
-EOF
